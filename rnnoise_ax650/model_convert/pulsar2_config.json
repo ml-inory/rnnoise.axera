@@ -1,0 +1,170 @@
+{
+  "input": "/workspace/model.onnx",
+  "output_dir": "/workspace/output",
+  "output_name": "model.axmodel",
+  "work_dir": "/workspace/output/work",
+  "model_type": "ONNX",
+  "target_hardware": "AX650",
+  "npu_mode": "NPU3",
+  "input_shapes": "features:1x65,conv1_mem:1x130,conv2_mem:1x256,gru1_s:1x384,gru2_s:1x384,gru3_s:1x384",
+  "onnx_opt": {
+    "disable_onnx_optimization": false,
+    "enable_onnxsim": false,
+    "model_check": true
+  },
+  "quant": {
+    "input_configs": [
+      {
+        "tensor_name": "features",
+        "calibration_dataset": "/workspace/calib_data/features.tar.gz",
+        "calibration_format": "Numpy",
+        "calibration_size": 30,
+        "calibration_mean": [],
+        "calibration_std": []
+      },
+      {
+        "tensor_name": "conv1_mem",
+        "calibration_dataset": "/workspace/calib_data/conv1_mem.tar.gz",
+        "calibration_format": "Numpy",
+        "calibration_size": 30,
+        "calibration_mean": [],
+        "calibration_std": []
+      },
+      {
+        "tensor_name": "conv2_mem",
+        "calibration_dataset": "/workspace/calib_data/conv2_mem.tar.gz",
+        "calibration_format": "Numpy",
+        "calibration_size": 30,
+        "calibration_mean": [],
+        "calibration_std": []
+      },
+      {
+        "tensor_name": "gru1_s",
+        "calibration_dataset": "/workspace/calib_data/gru1_s.tar.gz",
+        "calibration_format": "Numpy",
+        "calibration_size": 30,
+        "calibration_mean": [],
+        "calibration_std": []
+      },
+      {
+        "tensor_name": "gru2_s",
+        "calibration_dataset": "/workspace/calib_data/gru2_s.tar.gz",
+        "calibration_format": "Numpy",
+        "calibration_size": 30,
+        "calibration_mean": [],
+        "calibration_std": []
+      },
+      {
+        "tensor_name": "gru3_s",
+        "calibration_dataset": "/workspace/calib_data/gru3_s.tar.gz",
+        "calibration_format": "Numpy",
+        "calibration_size": 30,
+        "calibration_mean": [],
+        "calibration_std": []
+      }
+    ],
+    "calibration_method": "MinMax",
+    "precision_analysis": true,
+    "precision_analysis_method": "EndToEnd",
+    "highest_mix_precision": false,
+    "layer_configs": [
+      {
+        "op_type": "MatMul",
+        "data_type": "U16",
+        "weight_data_type": "S8",
+        "output_data_type": "U16"
+      },
+      {
+        "op_type": "Conv",
+        "data_type": "U16",
+        "weight_data_type": "S8",
+        "output_data_type": "U16"
+      },
+      {
+        "op_type": "Add",
+        "data_type": "U16",
+        "output_data_type": "U16"
+      },
+      {
+        "op_type": "Mul",
+        "data_type": "U16",
+        "output_data_type": "U16"
+      },
+      {
+        "op_type": "Div",
+        "data_type": "U16",
+        "output_data_type": "U16"
+      },
+      {
+        "op_type": "Sub",
+        "data_type": "U16",
+        "output_data_type": "U16"
+      },
+      {
+        "op_type": "Concat",
+        "data_type": "U16",
+        "output_data_type": "U16"
+      },
+      {
+        "op_type": "Clip",
+        "data_type": "U16",
+        "output_data_type": "U16"
+      },
+      {
+        "op_type": "Slice",
+        "data_type": "U16",
+        "output_data_type": "U16"
+      }
+    ]
+  },
+  "input_processors": [
+    {
+      "tensor_name": "features",
+      "tensor_format": "RGB",
+      "tensor_layout": "NCHW",
+      "src_format": "RGB",
+      "src_dtype": "FP32",
+      "src_layout": "NCHW"
+    },
+    {
+      "tensor_name": "conv1_mem",
+      "tensor_format": "RGB",
+      "tensor_layout": "NCHW",
+      "src_format": "RGB",
+      "src_dtype": "FP32",
+      "src_layout": "NCHW"
+    },
+    {
+      "tensor_name": "conv2_mem",
+      "tensor_format": "RGB",
+      "tensor_layout": "NCHW",
+      "src_format": "RGB",
+      "src_dtype": "FP32",
+      "src_layout": "NCHW"
+    },
+    {
+      "tensor_name": "gru1_s",
+      "tensor_format": "RGB",
+      "tensor_layout": "NCHW",
+      "src_format": "RGB",
+      "src_dtype": "FP32",
+      "src_layout": "NCHW"
+    },
+    {
+      "tensor_name": "gru2_s",
+      "tensor_format": "RGB",
+      "tensor_layout": "NCHW",
+      "src_format": "RGB",
+      "src_dtype": "FP32",
+      "src_layout": "NCHW"
+    },
+    {
+      "tensor_name": "gru3_s",
+      "tensor_format": "RGB",
+      "tensor_layout": "NCHW",
+      "src_format": "RGB",
+      "src_dtype": "FP32",
+      "src_layout": "NCHW"
+    }
+  ]
+}

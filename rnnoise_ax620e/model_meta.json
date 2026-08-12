@@ -1,0 +1,140 @@
+{
+  "model_name": "rnnoise-ax620e",
+  "framework": "pytorch->onnx",
+  "task": "noise_suppression",
+  "route": "general",
+  "opset": 13,
+  "inputs": [
+    {
+      "name": "features",
+      "shape": [
+        1,
+        65
+      ],
+      "dtype": "float32",
+      "layout": "NC"
+    },
+    {
+      "name": "conv1_mem",
+      "shape": [
+        1,
+        130
+      ],
+      "dtype": "float32",
+      "layout": "NC"
+    },
+    {
+      "name": "conv2_mem",
+      "shape": [
+        1,
+        256
+      ],
+      "dtype": "float32",
+      "layout": "NC"
+    },
+    {
+      "name": "gru1_s",
+      "shape": [
+        1,
+        384
+      ],
+      "dtype": "float32",
+      "layout": "NC"
+    },
+    {
+      "name": "gru2_s",
+      "shape": [
+        1,
+        384
+      ],
+      "dtype": "float32",
+      "layout": "NC"
+    },
+    {
+      "name": "gru3_s",
+      "shape": [
+        1,
+        384
+      ],
+      "dtype": "float32",
+      "layout": "NC"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "gains",
+      "shape": [
+        1,
+        32
+      ],
+      "dtype": "float32",
+      "layout": "NC"
+    },
+    {
+      "name": "vad",
+      "shape": [
+        1,
+        1
+      ],
+      "dtype": "float32",
+      "layout": "NC"
+    },
+    {
+      "name": "conv1_mem_new",
+      "shape": [
+        1,
+        130
+      ],
+      "dtype": "float32",
+      "layout": "NC"
+    },
+    {
+      "name": "conv2_mem_new",
+      "shape": [
+        1,
+        256
+      ],
+      "dtype": "float32",
+      "layout": "NC"
+    },
+    {
+      "name": "gru1_s_new",
+      "shape": [
+        1,
+        384
+      ],
+      "dtype": "float32",
+      "layout": "NC"
+    },
+    {
+      "name": "gru2_s_new",
+      "shape": [
+        1,
+        384
+      ],
+      "dtype": "float32",
+      "layout": "NC"
+    },
+    {
+      "name": "gru3_s_new",
+      "shape": [
+        1,
+        384
+      ],
+      "dtype": "float32",
+      "layout": "NC"
+    }
+  ],
+  "stateful": true,
+  "frame_size": 480,
+  "sample_rate": 48000,
+  "preprocess": "48k PCM 帧(480) -> biquad HP -> FFT(960) -> 32 波段能量/DCT + pitch 特征 -> 65 维特征",
+  "input_domain": "float 等价 16-bit PCM（±32768 量级，不做归一化，与官方 demo 一致）",
+  "postprocess": "32 gains + vad -> gain 平滑/限幅 -> pitch filter -> 频谱合成 -> 480 样本",
+  "sdk_interface": {
+    "entry": "rnnoise_process_frame",
+    "args": "float32 帧(480) + 状态（内部维护）",
+    "returns": "float32 去噪帧 + vad"
+  },
+  "license": "isc"
+}

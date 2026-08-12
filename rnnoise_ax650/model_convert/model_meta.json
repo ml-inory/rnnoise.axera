@@ -1,0 +1,139 @@
+{
+  "model_name": "rnnoise-ax650",
+  "framework": "pytorch->onnx",
+  "task": "noise_suppression",
+  "route": "general",
+  "opset": 13,
+  "inputs": [
+    {
+      "name": "features",
+      "shape": [
+        1,
+        65
+      ],
+      "dtype": "float32",
+      "layout": "NC"
+    },
+    {
+      "name": "conv1_mem",
+      "shape": [
+        1,
+        130
+      ],
+      "dtype": "float32",
+      "layout": "NC"
+    },
+    {
+      "name": "conv2_mem",
+      "shape": [
+        1,
+        256
+      ],
+      "dtype": "float32",
+      "layout": "NC"
+    },
+    {
+      "name": "gru1_s",
+      "shape": [
+        1,
+        384
+      ],
+      "dtype": "float32",
+      "layout": "NC"
+    },
+    {
+      "name": "gru2_s",
+      "shape": [
+        1,
+        384
+      ],
+      "dtype": "float32",
+      "layout": "NC"
+    },
+    {
+      "name": "gru3_s",
+      "shape": [
+        1,
+        384
+      ],
+      "dtype": "float32",
+      "layout": "NC"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "gains",
+      "shape": [
+        1,
+        32
+      ],
+      "dtype": "float32",
+      "layout": "NC"
+    },
+    {
+      "name": "vad",
+      "shape": [
+        1,
+        1
+      ],
+      "dtype": "float32",
+      "layout": "NC"
+    },
+    {
+      "name": "conv1_mem_new",
+      "shape": [
+        1,
+        130
+      ],
+      "dtype": "float32",
+      "layout": "NC"
+    },
+    {
+      "name": "conv2_mem_new",
+      "shape": [
+        1,
+        256
+      ],
+      "dtype": "float32",
+      "layout": "NC"
+    },
+    {
+      "name": "gru1_s_new",
+      "shape": [
+        1,
+        384
+      ],
+      "dtype": "float32",
+      "layout": "NC"
+    },
+    {
+      "name": "gru2_s_new",
+      "shape": [
+        1,
+        384
+      ],
+      "dtype": "float32",
+      "layout": "NC"
+    },
+    {
+      "name": "gru3_s_new",
+      "shape": [
+        1,
+        384
+      ],
+      "dtype": "float32",
+      "layout": "NC"
+    }
+  ],
+  "stateful": true,
+  "frame_size": 480,
+  "sample_rate": 48000,
+  "preprocess": "48k PCM \u5e27(480) -> biquad HP -> FFT(960) -> 32 \u6ce2\u6bb5\u80fd\u91cf/DCT + pitch \u7279\u5f81 -> 65 \u7ef4\u7279\u5f81",
+  "input_domain": "float \u7b49\u4ef7 16-bit PCM\uff08\u00b132768 \u91cf\u7ea7\uff0c\u4e0d\u505a\u5f52\u4e00\u5316\uff0c\u4e0e\u5b98\u65b9 demo \u4e00\u81f4\uff09",
+  "postprocess": "32 gains + vad -> gain \u5e73\u6ed1/\u9650\u5e45 -> pitch filter -> \u9891\u8c31\u5408\u6210 -> 480 \u6837\u672c",
+  "sdk_interface": {
+    "entry": "rnnoise_process_frame",
+    "args": "float32 \u5e27(480) + \u72b6\u6001\uff08\u5185\u90e8\u7ef4\u62a4\uff09",
+    "returns": "float32 \u53bb\u566a\u5e27 + vad"
+  }
+}
