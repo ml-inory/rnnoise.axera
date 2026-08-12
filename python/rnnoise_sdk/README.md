@@ -1,6 +1,6 @@
 # rnnoise-ax Python SDK
 
-48kHz 单声道实时降噪（RNNoise，AX620E NPU3 编译）。
+48kHz 单声道实时降噪（RNNoise，AX650 NPU3 / AX620E NPU2 双芯编译）。
 
 - 输入：480 采样/帧 float32（16-bit PCM 等价域 ±32768，不做归一化）
 - 输出：去噪帧(480) + vad
@@ -18,4 +18,4 @@ frame = np.random.randn(480).astype(np.float32) * 3000  # 16-bit 域
 out, vad = denoiser.process_frame(frame)
 ```
 
-开发版含 onnxruntime CPU 回退；发布版（NPU 专用）仅依赖 numpy + pyaxengine。
+NPU 专用发布版：仅依赖 numpy + pyaxengine（无 onnxruntime/torch/transformers 回退）。

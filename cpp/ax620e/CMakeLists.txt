@@ -33,5 +33,7 @@ target_link_libraries(model_example PRIVATE rnnoise_ax620e_sdk)
 if(AX_RUNTIME_ROOT)
   target_include_directories(rnnoise_ax620e_sdk PUBLIC ${AX_RUNTIME_ROOT}/include)
   target_link_directories(rnnoise_ax620e_sdk PUBLIC ${AX_RUNTIME_ROOT}/lib)
-  target_link_libraries(rnnoise_ax620e_sdk PUBLIC ax_engine ax_sys pthread dl atomic)
+  # AX620E/AX630C（AX620E NPU2）官方 BSP（ax620e_bsp_sdk v2.0.0）的
+  # libax_engine.so 依赖 libax_interpreter.so（AX_NPU_Get_* 系列符号），须一并链接。
+  target_link_libraries(rnnoise_ax620e_sdk PUBLIC ax_engine ax_interpreter ax_sys pthread dl atomic)
 endif()

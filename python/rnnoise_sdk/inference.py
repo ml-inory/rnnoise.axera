@@ -1,4 +1,4 @@
-"""RNNoise AX620E 推理会话（开发版：默认 AX Engine，本机可用 onnxruntime CPU 回退验证）。"""
+"""RNNoise AX620E 推理会话（NPU 专用发布版：无 onnxruntime/torch 回退）。"""
 import numpy as np
 
 from . import dsp
@@ -16,19 +16,19 @@ _STATE_INPUTS = ["conv1_mem", "conv2_mem", "gru1_s", "gru2_s", "gru3_s"]
 
 
 class RNNoiseDenoiser:
-    """48k 单声道实时降噪器（默认 AX 芯片；本机验证时回退 onnxruntime CPU）。"""
+    """48k 单声道实时降噪器（AX 芯片端到端，无 CPU 回退）。"""
 
     def __init__(self, model_path, providers=None):
-        self.backend = "axengine"
         try:
             import axengine as axe
-            self.session = axe.InferenceSession(
-                model_path, providers=providers or [DEFAULT_PROVIDER])
-        except Exception:
-            import onnxruntime as ort
-            self.session = ort.InferenceSession(
-                model_path, providers=["CPUExecutionProvider"])
-            self.backend = "onnxruntime"
+        except ImportError as exc:
+            raise RuntimeError(
+                "SDK 为 NPU 专用发布版，仅支持在 AX 芯片上运行；请先安装 "
+                "requirements.txt 并在板端执行（无 onnxruntime/torch 回退）"
+            ) from exc
+        self.session = axe.InferenceSession(
+            model_path, providers=providers or [DEFAULT_PROVIDER])
+        self.backend = "axengine"
         self.input_names = [i.name for i in self.session.get_inputs()]
         self.output_names = [o.name for o in self.session.get_outputs()]
         self.reset()

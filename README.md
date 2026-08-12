@@ -27,7 +27,7 @@ Xiph RNNoise 语音降噪在爱芯 NPU 上的部署包，支持 **AX650（NPU3�
 | 芯片 | NPU | 模型目录 | gains cosine | 板端验证 |
 |---|---|---|---|---|
 | AX650 | NPU3 | `rnnoise_ax650/` | 0.9991（板端 198 帧） | ✅ C++ 2.91ms/帧，输出 cosine 0.9988 |
-| AX620E | NPU2 | `rnnoise_ax620e/` | 0.9987（Pulsar2 仿真 100 帧） | 待上板 |
+| AX620E | NPU2 | `rnnoise_ax620e/` | 0.9987（仿真） | ✅ AX630C 板（AX620E NPU2 同构）C++ 4.93ms/帧，输出 cosine 0.9989 |
 
 每个模型目录内含 `model.axmodel` + `model_meta.json`。
 量化：U16 链路（MatMul/Conv/Add/Mul/Div/Sub/Concat/Clip/Slice，S8 权重），
@@ -64,9 +64,9 @@ python3 python/demo.py --chip ax620e
 
 | 张量 | AX650 板端 cosine | AX620E 仿真 cosine |
 |---|---|---|
-| gains | 0.9991 | 0.9987 |
-| vad | 0.99996 | 0.99997 |
-| GRU 状态 | 0.992–0.996 | 0.996+ |
+| gains | 0.9991 | 0.9987（板端 0.9989） |
+| vad | 0.99996 | 0.99997（板端 0.99987） |
+| GRU 状态 | 0.992–0.996 | 0.996+（板端输出 0.9989） |
 
 ## 复现
 
